@@ -1,9 +1,9 @@
 %{
 Programme MatLab
-Transposition fréquentielle d'un signal haute fréquence dans la bande audible via undersampling
+Transposition frÃ©quentielle d'un signal haute frÃ©quence dans la bande audible via undersampling
 NavalGroup - Victor Deleau - Start 040717 - Last 200717
 
-Fonction à rajouter :
+Fonction Ã  rajouter :
 	- Lecture/Ecriture/ecoute de fichiers audio .wav pcm
 	- Redirection d'erreur
 %} 
@@ -13,17 +13,17 @@ Fonction à rajouter :
 fprintf('\n');
 
 disp ('----------------------------------------------------------------------------------------')
-disp ('---------------- Transposition fréquentielle via sous-échantillonnage ------------------')
+disp ('---------------- Transposition frÃ©quentielle via sous-Ã©chantillonnage ------------------')
 disp ('----------------------------------------------------------------------------------------')
 fprintf('\n');
 
-% Déclaration de variable
+% DÃ©claration de variable
 
-prompt = 'Mode démo (o/n) ?';
+prompt = 'Mode dÃ©mo (o/n) ?';
 demo = input( prompt, 's' );
 
 if strcmp(demo,'o') == 1 ;
-	disp ('Lancement du mode démo :')
+	disp ('Lancement du mode dÃ©mo :')
     disp ('Fmin = 80500 Hz')
     fmin = 80500;
     
@@ -39,13 +39,13 @@ if strcmp(demo,'o') == 1 ;
     disp ('foffset = 0 Hz')
     foffset = 0;
     
-    disp ('Coupure du filtre à 20000 Hz')
+    disp ('Coupure du filtre Ã  20000 Hz')
     f_LP = 20000;
     
-    disp ('Chirp de synthèse, durée 1 seconde')
+    disp ('Chirp de synthÃ¨se, durÃ©e 1 seconde')
     synth_duree = 1; 	
 
-    disp ('Frequence échantillonnage de 324000 Hz ')
+    disp ('Frequence Ã©chantillonnage de 324000 Hz ')
     fs = 324000;
 
     bw = (fmax - fmin);
@@ -55,22 +55,22 @@ if strcmp(demo,'o') == 1 ;
 else
     
 	disp ('Lancement du mode manuel :')
-    prompt = 'Fréquence Fmin ?';
+    prompt = 'FrÃ©quence Fmin ?';
     fmin = input( prompt );
-    prompt = 'Fréquence Fmax ?';
+    prompt = 'FrÃ©quence Fmax ?';
     fmax = input( prompt );
-    prompt = 'Fréquence minimale cible ? Il est recommandé de ne pas aller en dessous de 100 Hz';		% Pour le PDV
+    prompt = 'FrÃ©quence minimale cible ? Il est recommandÃ© de ne pas aller en dessous de 100 Hz';		% Pour le PDV
     fmincible = input( prompt );
-    prompt = 'Fréquence maximale cible ? Il est recommandé de ne pas aller au delà de 5000 Hz';		% Pour le PDV
+    prompt = 'FrÃ©quence maximale cible ? Il est recommandÃ© de ne pas aller au delÃ  de 5000 Hz';		% Pour le PDV
     fmaxcible = input( prompt );
-    prompt = 'Offset fréquentiel ?';
+    prompt = 'Offset frÃ©quentiel ?';
     foffset = input( prompt );
 
-    %disp ('Signal de synthèse (1) ou fichier audio .wav (2)  ?')
+    %disp ('Signal de synthÃ¨se (1) ou fichier audio .wav (2)  ?')
     %signal_choix = input( prompt );
     signal_choix = 1;
     if signal_choix == 1
-        prompt = 'Durée du signal de synthèse  ?';
+        prompt = 'DurÃ©e du signal de synthÃ¨se  ?';
         synth_duree = input( prompt );
 
         bw = (fmax - fmin);
@@ -83,7 +83,7 @@ else
     end 
 
     if signal_choix == 2
-        disp ('Le programme ne gère pas encore la lecture de fichier .wav')
+        disp ('Le programme ne gÃ¨re pas encore la lecture de fichier .wav')
         % PARTIE WAVE INPUT TODO %
     end
 
@@ -91,10 +91,10 @@ else
         disp ('Erreur : Veuillez retourner un entier valide.')
     end
 
-    prompt = 'Fréquence de coupure du filtre (20000 maximum)  ?';
+    prompt = 'FrÃ©quence de coupure du filtre (20000 maximum)  ?';
     f_LP = input(prompt);
     if f_LP > 20000;
-            disp ('Erreur : Fréquence de coupure supérieur à 20 000 Hertz')
+            disp ('Erreur : FrÃ©quence de coupure supÃ©rieur Ã  20 000 Hertz')
     end
 
 end
@@ -125,11 +125,10 @@ if (strcmp(plot_spectre_final,'o') | strcmp(plot_spectre_final,'n')) == 0
 end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Traitement du Signal
 
     t = 0:(1/(fs)):synth_duree;
-	% Création d'un signal type chirp
+	% CrÃ©ation d'un signal type chirp
 	x = chirp(t,fmin,synth_duree,fmax, 'linear');
     X = x + 100*randn(1, length(x));
 
@@ -149,7 +148,6 @@ end
 %}
     
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Undersampling
 
 kmax = fmax / bw;
@@ -190,8 +188,8 @@ Y = downsample(X,under_ratio);
 [p,q] = rat(48000/fs_under,0.0001);
 Z = resample(Y,p,q);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Création du filtre
+
+% CrÃ©ation du filtre
 
 %{
 fc = ((fmax-fmin + fmincible)/fmax);
@@ -204,7 +202,7 @@ Z = filter(b,a,X);
 % Z = filtfilt(b,a,C);      % Zero phase filtering
 %}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % X Plotting
 
 temp_size = size(X,2);
@@ -220,7 +218,7 @@ if strcmp(plot_origin,'o') == 1
 	axis ([0 0.1 -1.5 1.5  ]);
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Z Plotting
 
 temp_size = size(Z,2);
@@ -229,15 +227,14 @@ t_final = 1/temp_size:1/temp_size:1 ;
 if strcmp(plot_final,'o') == 1
 	figure;
 	plot (t_final,Z,'linewidth', 0.5);
-	title ('Signal undersamplé');
+	title ('Signal undersamplÃ©');
 	xlabel('Temps (s)');
-	legend('Signal undersamplé');
+	legend('Signal undersamplÃ©');
 	grid on;
-    axis([0 0.1 -1.5 1.5])     % Mise à l'échelle du graphique
+    axis([0 0.1 -1.5 1.5])     % Mise Ã  l'Ã©chelle du graphique
 end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Visualisation du spectre de sortie
 
 % Spectre initial
@@ -289,13 +286,13 @@ if strcmp(plot_spectre_final,'o') == 1
     axis([0 1000 0 0.05 ]);
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Ecoute du résultat
+
+% Ecoute du rÃ©sultat
 
 % downsample_ratio = ceil( fs_under / 48000);
 % Y_downsample = downsample(Y,downsample_ratio);
 
-prompt = 'Traitement terminé. Voulez vous écouter le résultat (o/n)?';
+prompt = 'Traitement terminÃ©. Voulez vous Ã©couter le rÃ©sultat (o/n)?';
 ecoute = input(prompt, 's');
 if (strcmp(ecoute,'o') | strcmp(ecoute,'n')) == 0
 	disp ('Erreur : Veuillez saisir oui (o) ou non (n)')
@@ -306,7 +303,6 @@ if strcmp(ecoute,'o') == 1
 end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Export au format wave
 
 %{
@@ -321,15 +317,15 @@ if strcmp(pcm,'o') == 1
 end
 %}
 
-%%% END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END
 
 empty = '';
 input(empty, 's');
 
-% Fermeture des fenêtres ouvertes
+% Fermeture des fenÃªtres ouvertes
 close all
 
-disp('Exécution terminé.')
+disp('ExÃ©cution terminÃ©.')
 
 
 
