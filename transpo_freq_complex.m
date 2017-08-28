@@ -1,9 +1,9 @@
 %{
 Programme MatLab
-Transposition fréquentielle d'un signal haute fréquence dans la bande audible
+Transposition frÃ©quentielle d'un signal haute frÃ©quence dans la bande audible
 NavalGroup - Victor Deleau - Start 040717 - Last 200717
 
-Fonction à rajouter :
+Fonction Ã  rajouter :
 	- Lecture/Ecriture/ecoute de fichiers audio .wav pcm
 	- Redirection d'erreur
     - Phase Domain Vocoder
@@ -15,21 +15,20 @@ addpath('fonction');
 fprintf('\n');
 
 disp ('----------------------------------------------------------------------------------------')
-disp ('------------------ Transposition fréquentielle via produit complexe --------------------')
+disp ('------------------ Transposition frÃ©quentielle via produit complexe --------------------')
 disp ('----------------------------------------------------------------------------------------')
 fprintf('\n');
 
 disp ('ATTENTION: phasedomainvocoder WIP')
 fprintf('\n');
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Déclaration de variable
+% DÃ©claration de variable
 
-prompt = 'Mode démo (o/n) ?';
+prompt = 'Mode dÃ©mo (o/n) ?';
 demo = input( prompt, 's' );
 
 if strcmp(demo,'o') == 1 ;
-	disp ('Lancement du mode démo :')
+	disp ('Lancement du mode dÃ©mo :')
     disp ('Fmin = 40500 Hz')
     fmin = 40500;
     
@@ -45,13 +44,13 @@ if strcmp(demo,'o') == 1 ;
     disp ('foffset = 0 Hz')
     foffset = 0;
     
-    disp ('Coupure du filtre à 20000 Hz')
+    disp ('Coupure du filtre Ã  20000 Hz')
     f_LP = 20000;
     
-    disp ('Chirp de synthèse, durée 1 seconde')
+    disp ('Chirp de synthÃ¨se, durÃ©e 1 seconde')
     synth_duree = 1; 	
 
-    disp ('Frequence échantillonnage de 324000 Hz ')
+    disp ('Frequence Ã©chantillonnage de 324000 Hz ')
     fs = 324000;
 
     bw = (fmax - fmin);
@@ -61,20 +60,20 @@ if strcmp(demo,'o') == 1 ;
 else
     
 	disp ('Lancement du mode manuel :')
-    prompt = 'Fréquence Fmin ?';
+    prompt = 'FrÃ©quence Fmin ?';
     fmin = input( prompt );
-    prompt = 'Fréquence Fmax ?';
+    prompt = 'FrÃ©quence Fmax ?';
     fmax = input( prompt );
-    prompt = 'Fréquence minimale cible ? Il est recommandé de ne pas aller en dessous de 100 Hz';		% Pour le PDV
+    prompt = 'FrÃ©quence minimale cible ? Il est recommandÃ© de ne pas aller en dessous de 100 Hz';		% Pour le PDV
     fmincible = input( prompt );
-    prompt = 'Fréquence maximale cible ? Il est recommandé de ne pas aller au delà de 5000 Hz';		% Pour le PDV
+    prompt = 'FrÃ©quence maximale cible ? Il est recommandÃ© de ne pas aller au delÃ  de 5000 Hz';		% Pour le PDV
     fmaxcible = input( prompt );
-    prompt = 'Offset fréquentiel ?';
+    prompt = 'Offset frÃ©quentiel ?';
     foffset = input( prompt );
 
     signal_choix = 1;
     if signal_choix == 1
-        prompt = 'Durée du signal de synthèse  ?';
+        prompt = 'DurÃ©e du signal de synthÃ¨se  ?';
         synth_duree = input( prompt );
 
         bw = (fmax - fmin);
@@ -87,7 +86,7 @@ else
     end 
 
     if signal_choix == 2
-        disp ('Le programme ne gère pas encore la lecture de fichier .wav')
+        disp ('Le programme ne gÃ¨re pas encore la lecture de fichier .wav')
         % PARTIE WAVE INPUT TODO %
     end
 
@@ -95,10 +94,10 @@ else
         disp ('Erreur : Veuillez retourner un entier valide.')
     end
 
-    prompt = 'Fréquence de coupure du filtre (20000 maximum)  ?';
+    prompt = 'FrÃ©quence de coupure du filtre (20000 maximum)  ?';
     f_LP = input(prompt);
     if f_LP > 20000;
-            disp ('Erreur : Fréquence de coupure supérieur à 20 000 Hertz')
+            disp ('Erreur : FrÃ©quence de coupure supÃ©rieur Ã  20 000 Hertz')
     end
 
 end
@@ -130,21 +129,20 @@ if (strcmp(plot_spectre_final,'o') | strcmp(plot_spectre_final,'n')) == 0
 end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Traitement du Signal
 
     t = 0:(1/fs):synth_duree;
-	% Création d'un signal type chirp
+	% CrÃ©ation d'un signal type chirp
 	X = chirp(t,fmin,synth_duree,fmax, 'linear');
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % produit complexe
 
     X_complex = X .* sin( 2 * pi * fol * t);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Création du filtre
+
+%%% CrÃ©ation du filtre
 
 fc = (fmax-fmin+fmincible)/fmax;
 n = 9;
@@ -164,17 +162,15 @@ if strcmp(plot_filter,'o') == 1
 end
     
     
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Application du filtre
 
 Z = filter(b,a,X_complex);
 % Z = filtfilt(b,a,C);      % Zero phase filtering
 
-% Convolution temporel très longue
+% Convolution temporel trÃ¨s longue
 % Z = conv(X_complex, df);
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Dilatation/Compression spectrale
 
  fprintf('\n');
@@ -183,7 +179,7 @@ disp ('--- Spectral Scaling Initiation ---')
 
 nb_e = synth_duree * fs
 
-% Calcul du ratio de dilatation/compression nécessaire
+% Calcul du ratio de dilatation/compression nÃ©cessaire
 ratio_pdv = (fmaxcible - fmincible) / (fmax - fmin)
 
 % Appel de la fonction de compression/dilatation spectrale
@@ -194,7 +190,7 @@ ratio_pdv = (fmaxcible - fmincible) / (fmax - fmin)
 % disp ('--- End of Spectral Scaling ---');
 fprintf('\n');
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % X_complex Plotting
 
 temp_size = size(X_complex,2);
@@ -210,7 +206,7 @@ if strcmp(plot_origin,'o') == 1
 	axis ([0 0.1 -1.5 1.5  ]);
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Z Plotting
 
 temp_size = size(Z,2);
@@ -219,14 +215,14 @@ t_final = 1/temp_size : 1/temp_size : synth_duree;
 if strcmp(plot_final,'o') == 1
 	figure;
 	plot (t_final,Z,'linewidth', 0.5);
-	title ('Signal infradyne Filtré');
+	title ('Signal infradyne FiltrÃ©');
 	xlabel('Temps (s)');
-	legend('Signal infradyne Filtré');
+	legend('Signal infradyne FiltrÃ©');
 	grid on;
-    axis([0 0.1 -1.500 1.500]);     % Mise à l'échelle du graphique
+    axis([0 0.1 -1.500 1.500]);     % Mise Ã  l'Ã©chelle du graphique
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Visualisation du spectre de sortie
 
 % Spectre initial
@@ -279,13 +275,12 @@ if strcmp(plot_spectre_final,'o') == 1
 end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Ecoute du résultat
+% Ecoute du rÃ©sultat
 
 downsample_ratio = ceil( fs / 48000);
 Z_downsample = downsample(Z,downsample_ratio);
 
-prompt = 'Traitement terminé. Voulez vous écouter le résultat (o/n)?';
+prompt = 'Traitement terminÃ©. Voulez vous Ã©couter le rÃ©sultat (o/n)?';
 ecoute = input(prompt, 's');
 if (strcmp(ecoute,'o') | strcmp(ecoute,'n')) == 0
 	disp ('Erreur : Veuillez saisir oui (o) ou non (n)')
@@ -295,7 +290,7 @@ if strcmp(ecoute,'o') == 1
 	soundsc(real(Z_downsample),48000);
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Export au format wave
 
 %{
@@ -310,15 +305,15 @@ if strcmp(pcm,'o') == 1
 end
 %}
 
-%%% END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END
 
 empty = '';
 input(empty, 's');
 
-% Fermeture des fenêtres ouvertes
+% Fermeture des fenÃªtres ouvertes
 close all
 
-disp('Exécution terminé.')
+disp('ExÃ©cution terminÃ©.')
 
 
 
